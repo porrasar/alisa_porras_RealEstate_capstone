@@ -21,6 +21,7 @@
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.format_sql">true</property>
 
+
         <!--   Mapping entity file -->
         <mapping class="com.perscholas.models.Department"/>
         <mapping class="com.perscholas.models.Customer"/>

@@ -46,8 +46,8 @@ public class Main
         department2.setDepartmentName("Potential Customer");
 
 
-        //create arraylist to add customer to
 
+        //create arraylist to add customer to
 
         //adding customer entity objects to array list
         List<Customer> customerList1 = new ArrayList<>();
