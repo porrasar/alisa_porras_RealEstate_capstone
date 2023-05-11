@@ -24,10 +24,13 @@
         <!--   Mapping entity file -->
         <mapping class="com.perscholas.models.Department"/>
         <mapping class="com.perscholas.models.Customer"/>
+
+        <!--
         <mapping class="com.perscholas.models.CurrentCustomer"/>
         <mapping class="com.perscholas.models.PotentialCustomer"/>
         <mapping class="com.perscholas.models.Payments"/>
         <mapping class="com.perscholas.models.Appointment"/>
+        -->
 
 
     </session-factory>

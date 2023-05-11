@@ -11,155 +11,224 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 //--------------------------code from hibernate demo---------------------------------------------------
 
-public class Main {//class beg
+public class Main
+{//class beg
 
-    public static void main(String[] args) {//main beg
+    public static void main(String[] args)
+    {//main beg
 
-        //--------------------------code from hibernate demo---------------------------------------------------
+        System.out.println("Maven + Hibernate + SQL One to Many Mapping Annotations");
+
         SessionFactory factory = new
                 Configuration().configure().buildSessionFactory();
         Session session = factory.openSession();
         Transaction t = session.beginTransaction();
 
-        //--------------------------code from hibernate demo---------------------------------------------------
 
-        //testing git push
+        // creating department objects
+        Department department1 = new Department();
+        Department department2 = new Department();
 
-        //----------------------------------CREATE OBJECT---------------------------------------
+        // creating customer objects
+        Customer currentCustomer1 = new Customer();
+        currentCustomer1.setCustomerName("Toby James");
+        currentCustomer1.setCustomerZip("48236");
+        department1.setDepartmentName("Current Customer");
 
-        Scanner scannerInput = new Scanner(System.in);
-        Appointment reservations = new Appointment();
-        Payments payments = new Payments();
-        Customer customer = new Customer();
-        Department department = new Department();
+        Customer currentCustomer2 = new Customer();
+        currentCustomer2.setCustomerName("Kimberly Jojo");
+        currentCustomer2.setCustomerZip("32581");
+        department1.setDepartmentName("Current Customer");
 
-
-        //---------------------------------BUSINESS LOGIC --------------------------------------
-
-        Customer currentCustomer1 = new CurrentCustomer(33333, "Toby James",
-                "8745 Too Little", "555-222-9858",
-                true);
-//        true, false, true, true);
-        Customer currentCustomer2 = new CurrentCustomer(1111, "Lynn Odd",
-                "8999 Big Cow", "882-282-9825",
-                true);
-//        true, true, true, true);
-        Customer potentialCustomer1 = new PotentialCustomer(44444, "Kanesha Washington",
-                "52 Not Now Ave", "748-227-9645",
-                true);
-//                true, true, "225 Stone St");
-        Customer potentialCustomer2 = new PotentialCustomer(5555, "Tommy Ham",
-                "52552 ok dr ", "945-227-8888",
-                true);
-//        true, false, "235 Edge St");
+        Customer potentialCustomer3 = new Customer();
+        potentialCustomer3.setCustomerName("Peter Toduuu");
+        potentialCustomer3.setCustomerZip("98745");
+        department2.setDepartmentName("Potential Customer");
 
 
-        //ADD new customer
-        department.addCustomer(currentCustomer1);
-        department.addCustomer(currentCustomer2);
-        department.addCustomer(potentialCustomer1);
-        department.addCustomer(potentialCustomer2);
+        //create arraylist to add customer to
 
 
-        //using scanner to get user input
-
-        System.out.println("Hello, please enter what you would like to do:");
-
-        System.out.println("1. Add a customer");
-        System.out.println("2. Get existing customer");
-        System.out.println("3. Get ALL customers");
-        System.out.println("4. Update a customer");
-        System.out.println("5. Delete a customer");
-
-        String chosenOption = scannerInput.next();
-        System.out.println("CHOSEN OPTION:   " + chosenOption);
+        //adding customer entity objects to array list
+        List<Customer> customerList1 = new ArrayList<>();
+        customerList1.add(currentCustomer1);
+        customerList1.add(currentCustomer2);
 
 
-        // ADD a customer
-        if (chosenOption.equals("1")) {
-            System.out.println("ADD A NEW CUSTOMER");
-            System.out.println(" ");
-            System.out.println("please enter the information you "
-                    + "would like to add. There are 5 fields. \n" +
-                    "Please enter in this format: please put two spaces" +
-                    " between the fields "
-                    + " for example: " +
-                    "33333,Toby James,8745 Too Little,555-222-9858,true");
+        List<Customer> potentialList1 = new ArrayList<>();
+        potentialList1.add(potentialCustomer3);
 
-            String customerInput = scannerInput.next();
-            customerInput += scannerInput.nextLine();
-            System.out.println("customer input: " + customerInput);
-
-            Customer currentCustomer3 = new Customer(customerInput);
-
-            System.out.println("ADD STILL NOT WORKING");
-            System.out.println("currentcust3: "
-                    + (currentCustomer3.toString()));
-
-            //Customer currentCustomer3 = new CurrentCustomer(customerInput);
-            //System.out.println(Arrays.toString(currentCustomer3));
-            //ArrayList<Customer> currentCustomer3
-            //List<Customer> currentCustomer3
-            //        = department.getCustomerArray();
-            //System.out.println("new data: "
-            department.addCustomer(currentCustomer3);
-            System.out.println("Proof record is added: ");
-            department.getCustomerArray();
-            System.out.println(" ");
+        //making customer data persistent/permanent/saving customer data
+        session.save(currentCustomer1);
+        session.save(currentCustomer2);
+        session.save(potentialCustomer3);
 
 
-            // get a specific EXISTING customer
-        } else if (chosenOption.equals("2")) {
-            System.out.println("GET A SPECIFIC EXISTING CUSTOMER");
-            System.out.println("please enter the customer id "
-                    + "you would like to attain: ");
-            int customerId = scannerInput.nextInt();
-            ArrayList<Customer> customerGetSpecificArrayList
-                    = department.getASpecificCustomerArray(customerId);
-            System.out.println(" ");
+        //create department object
 
 
-            // get ALL existing customer
-        } else if (chosenOption.equals("3")) {
-            System.out.println("they chose option 3 to get all customers");
-            System.out.println("GET ALL CUSTOMER");
-            ArrayList<Customer> customerArrayList
-                    = department.getCustomerArray();
-            System.out.println(" ");
+        department1.setDepartmentName("Current Customer");
+        department1.setCustomerList(customerList1);
 
 
-            // UPDATE a specific existing customer
-        } else if (chosenOption.equals("4")) {
-            System.out.println("they chose option 4 to update existing customer");
+
+        department2.setDepartmentName("Potential Customer");
+        department2.setCustomerList(potentialList1);
+
+        //store department
+        session.save(department1);
+        session.save(department2);
+
+        t.commit();
 
 
-            System.out.println("  please enter the customer id "
-                    + "you would like to update: ");
-            int customerId = scannerInput.nextInt();
-
-            System.out.println("please enter the field you would "
-                    + "like to update (name or address)");
-
-            String customerField = scannerInput.next();
-
-            System.out.print("please enter the new info:   ");
-
-            String newInfoToUpdateField = scannerInput.next();
-            newInfoToUpdateField += scannerInput.nextLine();
-            department.updateSpecifCustomerArray
-                    (customerId, customerField, newInfoToUpdateField);
-            System.out.println("  ");
 
 
-            // DELETE a specific existing customer
-        } else if (chosenOption.equals("5")) {
-            System.out.println("they chose option 5 to delete");
-            System.out.println("DELETE A SPECIFIC EXISTING CUSTOMER");
-            System.out.println("please enter the customer id to delete: ");
-            int customerId = scannerInput.nextInt();
-            department.deleteSpecificCustomerArray(customerId);
 
-        }
+
+
+
+
+
+
+
+
+//-----------BEFORE I MADE ANY CHANGES ON 5/10/23 @ 10:02 pm
+//        //----------------------------------CREATE OBJECT---------------------------------------
+//
+//        Scanner scannerInput = new Scanner(System.in);
+//        Appointment reservations = new Appointment();
+//        Payments payments = new Payments();
+//        Customer customer = new Customer();
+//        Department department = new Department();
+//
+//
+//        //---------------------------------BUSINESS LOGIC --------------------------------------
+//
+//        Customer currentCustomer1 = new CurrentCustomer(33333, "Toby James",
+//                "8745 Too Little", "555-222-9858",
+//                true);
+////        true, false, true, true);
+//        Customer currentCustomer2 = new CurrentCustomer(1111, "Lynn Odd",
+//                "8999 Big Cow", "882-282-9825",
+//                true);
+////        true, true, true, true);
+//        Customer potentialCustomer1 = new PotentialCustomer(44444, "Kanesha Washington",
+//                "52 Not Now Ave", "748-227-9645",
+//                true);
+////                true, true, "225 Stone St");
+//        Customer potentialCustomer2 = new PotentialCustomer(5555, "Tommy Ham",
+//                "52552 ok dr ", "945-227-8888",
+//                true);
+////        true, false, "235 Edge St");
+//
+//
+//        //ADD new customer
+//        department.addCustomer(currentCustomer1);
+//        department.addCustomer(currentCustomer2);
+//        department.addCustomer(potentialCustomer1);
+//        department.addCustomer(potentialCustomer2);
+//
+//
+//        //using scanner to get user input
+//
+//        System.out.println("Hello, please enter what you would like to do:");
+//
+//        System.out.println("1. Add a customer");
+//        System.out.println("2. Get existing customer");
+//        System.out.println("3. Get ALL customers");
+//        System.out.println("4. Update a customer");
+//        System.out.println("5. Delete a customer");
+//
+//        String chosenOption = scannerInput.next();
+//        System.out.println("CHOSEN OPTION:   " + chosenOption);
+//
+//
+//        // ADD a customer
+//        if (chosenOption.equals("1")) {
+//            System.out.println("ADD A NEW CUSTOMER");
+//            System.out.println(" ");
+//            System.out.println("please enter the information you "
+//                    + "would like to add. There are 5 fields. \n" +
+//                    "Please enter in this format: please put two spaces" +
+//                    " between the fields "
+//                    + " for example: " +
+//                    "33333,Toby James,8745 Too Little,555-222-9858,true");
+//
+//            String customerInput = scannerInput.next();
+//            customerInput += scannerInput.nextLine();
+//            System.out.println("customer input: " + customerInput);
+//
+//            Customer currentCustomer3 = new Customer(customerInput);
+//
+//            System.out.println("ADD STILL NOT WORKING");
+//            System.out.println("currentcust3: "
+//                    + (currentCustomer3.toString()));
+//
+//            //Customer currentCustomer3 = new CurrentCustomer(customerInput);
+//            //System.out.println(Arrays.toString(currentCustomer3));
+//            //ArrayList<Customer> currentCustomer3
+//            //List<Customer> currentCustomer3
+//            //        = department.getCustomerArray();
+//            //System.out.println("new data: "
+//            department.addCustomer(currentCustomer3);
+//            System.out.println("Proof record is added: ");
+//            department.getCustomerArray();
+//            System.out.println(" ");
+//
+//
+//            // get a specific EXISTING customer
+//        } else if (chosenOption.equals("2")) {
+//            System.out.println("GET A SPECIFIC EXISTING CUSTOMER");
+//            System.out.println("please enter the customer id "
+//                    + "you would like to attain: ");
+//            int customerId = scannerInput.nextInt();
+//            ArrayList<Customer> customerGetSpecificArrayList
+//                    = department.getASpecificCustomerArray(customerId);
+//            System.out.println(" ");
+//
+//
+//            // get ALL existing customer
+//        } else if (chosenOption.equals("3")) {
+//            System.out.println("they chose option 3 to get all customers");
+//            System.out.println("GET ALL CUSTOMER");
+//            ArrayList<Customer> customerArrayList
+//                    = department.getCustomerArray();
+//            System.out.println(" ");
+//
+//
+//            // UPDATE a specific existing customer
+//        } else if (chosenOption.equals("4")) {
+//            System.out.println("they chose option 4 to update existing customer");
+//
+//
+//            System.out.println("  please enter the customer id "
+//                    + "you would like to update: ");
+//            int customerId = scannerInput.nextInt();
+//
+//            System.out.println("please enter the field you would "
+//                    + "like to update (name or address)");
+//
+//            String customerField = scannerInput.next();
+//
+//            System.out.print("please enter the new info:   ");
+//
+//            String newInfoToUpdateField = scannerInput.next();
+//            newInfoToUpdateField += scannerInput.nextLine();
+//            department.updateSpecifCustomerArray
+//                    (customerId, customerField, newInfoToUpdateField);
+//            System.out.println("  ");
+//
+//
+//            // DELETE a specific existing customer
+//        } else if (chosenOption.equals("5")) {
+//            System.out.println("they chose option 5 to delete");
+//            System.out.println("DELETE A SPECIFIC EXISTING CUSTOMER");
+//            System.out.println("please enter the customer id to delete: ");
+//            int customerId = scannerInput.nextInt();
+//            department.deleteSpecificCustomerArray(customerId);
+//
+//        }
 
         //--------------------------code from hibernate demo---------------------------------------------------
 //        SessionFactory factory = new
