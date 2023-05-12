@@ -23,9 +23,12 @@ public class Department implements Serializable
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@Column(name = "Department Id")
     private int departmentId;
+    //@Column(name = "Department Name")
     private String departmentName;
 
+    //@Column(name = "Customer IDK")
     @OneToMany(targetEntity = Customer.class, cascade = {CascadeType.ALL})
     private List customerList;
 
@@ -42,6 +45,20 @@ public class Department implements Serializable
         this.departmentId = departmentId;
         this.departmentName = departmentName;
     }
+
+    //------------------------------business logic  --------------------------------------
+    //    // get a specific existing customer
+//    public ArrayList<Customer> getASpecificCustomerArray(int customerId)
+//    {
+//        for (int i = 0; i < customerArray.size(); i++)
+//        {
+//            if (customerId == customerArray.get(i).getCustomerId())
+//            {
+//                System.out.println(customerArray.get(i).getCustomerInfo());
+//            }
+//    }
+//        return customerArray;
+
 
 
     //------------------------------getter and setter -------------------------------------
@@ -70,6 +87,14 @@ public class Department implements Serializable
         this.customerList = customerList;
     }
 
+    @Override
+    public String toString() {
+        return "Department{" +
+                "departmentId=" + departmentId +
+                ", departmentName='" + departmentName + '\'' +
+                ", customerList=" + customerList +
+                '}';
+    }
 
 //------------------------old logic as 5/10/23 at 10:53 pm----------------------
 

@@ -14,16 +14,16 @@ import org.hibernate.cfg.Configuration;
 public class Main
 {//class beg
 
-    public static void main(String[] args)
-    {//main beg
+    public static void main(String[] args) {//main beg
 
         System.out.println("Maven + Hibernate + SQL One to Many Mapping Annotations");
 
         SessionFactory factory = new
                 Configuration().configure().buildSessionFactory();
-        Session session = factory.openSession();
-        Transaction t = session.beginTransaction();
+        Session session = factory.openSession();  //create the session object
+        Transaction t = session.beginTransaction();  //begins the transaction
 
+        Scanner scannerInput = new Scanner(System.in);
 
         // creating department objects
         Department department1 = new Department();
@@ -47,48 +47,149 @@ public class Main
 
 
 
-        //create arraylist to add customer to
+
+        //create arraylist to add customer
 
         //adding customer entity objects to array list
         List<Customer> customerList1 = new ArrayList<>();
+        //addCurrentCustomerToArrayList(currentCustomer1);
+        //addCurrentCustomerToArrayList(currentCustomer2);
         customerList1.add(currentCustomer1);
         customerList1.add(currentCustomer2);
 
-
         List<Customer> potentialList1 = new ArrayList<>();
+        //addPotentialCustomerToArrayList(potentialCustomer3);
         potentialList1.add(potentialCustomer3);
 
-        //making customer data persistent/permanent/saving customer data
+
+        //save all my customer data to kinda a holding area
+        // aka a session/connection to database
         session.save(currentCustomer1);
         session.save(currentCustomer2);
         session.save(potentialCustomer3);
 
-
         //create department object
-
-
         department1.setDepartmentName("Current Customer");
         department1.setCustomerList(customerList1);
-
-
 
         department2.setDepartmentName("Potential Customer");
         department2.setCustomerList(potentialList1);
 
         //store department
-        session.save(department1);
+        session.save(department1);                   //holds the data in kinda a container until committed
         session.save(department2);
 
-        t.commit();
+        t.commit();   // actually committing/saving/persisting all my changes to my database
+
+        //------------------------CRUD OPERATIONS---------------------------------------------
+
+        SessionFactory sessionFactoryCrud = new Configuration().configure().buildSessionFactory();
+        Session sessionCrud = factory.openSession();
+        Transaction transactionCrud = session.beginTransaction();
 
 
+        System.out.println(" ");
+        System.out.println("Hello, please enter what you would like to do:");
+
+        System.out.println("1. Add a customer");
+        System.out.println("2. Get existing customer");
+        System.out.println("3. Get ALL customers");
+        System.out.println("4. Update a customer");
+        System.out.println("5. Delete a customer");
+
+        String chosenOption = scannerInput.next();
+        System.out.println("CHOSEN OPTION:   " + chosenOption);
+
+        if (chosenOption.equals("1"))
+        {
+            Customer potentialCustomer4 = new Customer();
+
+            potentialCustomer4.setCustomerName("Lula Washington");
+            potentialCustomer4.setCustomerZip("87458");
+            department2.setDepartmentName("Potential Customer");
 
 
+            potentialList1.add(potentialCustomer4);
+            session.save(potentialCustomer4);
+
+            //department2.setCustomerList(potentialList1);
+            //session.save(department2);
+
+            transactionCrud.commit();
+            sessionCrud.close();
+
+            System.out.println(" ");
+            System.out.println("ADD A NEW CUSTOMER" + potentialCustomer4);
+
+        } else if (chosenOption.equals("2")) {
+            //----------------get a specific EXISTING customer------------------------------------
+
+            //Department department = sessionCrud.get(Department.class,2);
+            Customer customer = sessionCrud.get(Customer.class, 3);
+            System.out.println(" ");
+            System.out.println("RETRIEVED AN EXISTING RECORD: " + customer);
+
+            sessionCrud.close();
 
 
+        } else if (chosenOption.equals("3")) {
+            //----------------get all records------------------------------------
+            //Department department = sessionCrud.get(Department.class,2);
+//            Customer customer = sessionCrud.
+//
+//            List li = sessionCrud.createQuery("Department");
+//
+//            System.out.println(" ");
+//            System.out.println("RETRIEVED AN EXISTING RECORD: " + customer);
+//
+//            sessionCrud.close();
+
+            System.out.println("GET ALL RECORDS");
 
 
+        } else if (chosenOption.equals("4")) {
+            //----------------update a record------------------------------------
+            System.out.println("UPDATE RECORD");
 
+
+            Customer customer = sessionCrud.get(Customer.class, 2);
+            customer.setCustomerName("changed customer name");
+
+//            Department department = sessionCrud.get(Department.class,2);  //accessing this id in the table
+//            department.setDepartmentName("changed department name");                //updating the table
+
+            sessionCrud.update(customer);
+            //sessionCrud.save(department);
+
+            transactionCrud.commit();                                // actually committing/saving all my changes to my database
+
+            System.out.println(" ");
+            System.out.println("UPDATED AN EXISTING RECORD: " + customer);
+
+            sessionCrud.close();
+
+        }
+        else if (chosenOption.equals("5"))
+        {
+            //----------------delete a record------------------------------------
+
+
+//          Department department = sessionCrud.get(Department.class,2);    //accessing this id in the table
+//          department.setDepartmentName("changed department name");        //updating the table
+
+            currentCustomer2 = sessionCrud.get(Customer.class, 2);
+            System.out.println("BEFORE DELETE RECORD" + currentCustomer2);
+            sessionCrud.delete(currentCustomer2);
+
+            transactionCrud.commit();
+            //session.close();
+
+            System.out.println(" ");
+            System.out.println("DELETE RECORD");
+        }
+
+
+    }//main end
 
 
 
@@ -305,5 +406,7 @@ public class Main
 //        t.commit();
 
 
-    }//main end
+
 }//class end
+
+

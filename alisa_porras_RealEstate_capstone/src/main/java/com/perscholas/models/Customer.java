@@ -1,16 +1,7 @@
 package com.perscholas.models;
 
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-
-
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 //----------------------------------------------------------------------------------------------------
 
@@ -24,8 +15,13 @@ public class Customer
 
     @Id
     @GeneratedValue( strategy= GenerationType.IDENTITY )
+    //@Column(name = "Customer Id")
     private int customerId;
+
+    //@Column(name = "Customer Name")
     private String customerName;
+
+    //@Column(name = "Customer Zip Code")
     private String customerZip;
 
     //----------------------------------------CONSTRUCTOR ---------------------------------------
@@ -68,6 +64,14 @@ public class Customer
         this.customerZip = customerZip;
     }
 
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "customerId=" + customerId +
+                ", customerName='" + customerName + '\'' +
+                ", customerZip='" + customerZip + '\'' +
+                '}';
+    }
 
     //------------------------old logic as 5/10/23 at 10:53 pm----------------------
 //
