@@ -43,6 +43,7 @@ public class Main
         currentCustomer2.setCustomerZip("32581");
         department1.setDepartmentName("Current Customer");
 
+
         Customer potentialCustomer3 = new Customer();
         potentialCustomer3.setCustomerName("Peter Toduuu");
         potentialCustomer3.setCustomerZip("98745");
