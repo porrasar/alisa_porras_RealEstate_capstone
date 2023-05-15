@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+
 //--------------------------code from hibernate demo---------------------------------------------------
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -20,8 +21,10 @@ public class Main
 
         SessionFactory factory = new
                 Configuration().configure().buildSessionFactory();
-        Session session = factory.openSession();  //create the session object
+        Session session = factory.openSession();  //create the session object, connection to database
         Transaction t = session.beginTransaction();  //begins the transaction
+
+        int customerCounter = 0;
 
         Scanner scannerInput = new Scanner(System.in);
 
@@ -45,28 +48,30 @@ public class Main
         potentialCustomer3.setCustomerZip("98745");
         department2.setDepartmentName("Potential Customer");
 
-
-
-
         //create arraylist to add customer
-
         //adding customer entity objects to array list
         List<Customer> customerList1 = new ArrayList<>();
-        //addCurrentCustomerToArrayList(currentCustomer1);
-        //addCurrentCustomerToArrayList(currentCustomer2);
         customerList1.add(currentCustomer1);
         customerList1.add(currentCustomer2);
 
+
+//        addCustomerToArrayList(customerList1,currentCustomer2);
+//        addCustomerToArrayList(customerList1,currentCustomer1);
+
+
         List<Customer> potentialList1 = new ArrayList<>();
-        //addPotentialCustomerToArrayList(potentialCustomer3);
         potentialList1.add(potentialCustomer3);
+
 
 
         //save all my customer data to kinda a holding area
         // aka a session/connection to database
         session.save(currentCustomer1);
+        customerCounter++;
         session.save(currentCustomer2);
+        customerCounter++;
         session.save(potentialCustomer3);
+        customerCounter++;
 
         //create department object
         department1.setDepartmentName("Current Customer");
@@ -79,13 +84,10 @@ public class Main
         session.save(department1);                   //holds the data in kinda a container until committed
         session.save(department2);
 
-        t.commit();   // actually committing/saving/persisting all my changes to my database
+        session.flush();    //commit everything above this
+        //t.commit();   // actually committing/saving/persisting all my changes to my database
 
         //------------------------CRUD OPERATIONS---------------------------------------------
-
-        SessionFactory sessionFactoryCrud = new Configuration().configure().buildSessionFactory();
-        Session sessionCrud = factory.openSession();
-        Transaction transactionCrud = session.beginTransaction();
 
 
         System.out.println(" ");
@@ -100,8 +102,11 @@ public class Main
         String chosenOption = scannerInput.next();
         System.out.println("CHOSEN OPTION:   " + chosenOption);
 
+        //                        ADD NEW CUSTOMER
         if (chosenOption.equals("1"))
         {
+
+            //addNewCustomer();
             Customer potentialCustomer4 = new Customer();
 
             potentialCustomer4.setCustomerName("Lula Washington");
@@ -111,78 +116,71 @@ public class Main
 
             potentialList1.add(potentialCustomer4);
             session.save(potentialCustomer4);
+            customerCounter++;
 
             //department2.setCustomerList(potentialList1);
             //session.save(department2);
 
-            transactionCrud.commit();
-            sessionCrud.close();
+            session.flush();
 
             System.out.println(" ");
             System.out.println("ADD A NEW CUSTOMER" + potentialCustomer4);
 
-        } else if (chosenOption.equals("2")) {
-            //----------------get a specific EXISTING customer------------------------------------
 
-            //Department department = sessionCrud.get(Department.class,2);
-            Customer customer = sessionCrud.get(Customer.class, 3);
+            //                    RETRIEVE EXISTING CUSTOMER
+        } else if (chosenOption.equals("2"))
+        {
+             //Department department = sessionCrud.get(Department.class,2);
+            Customer customer = session.get(Customer.class, 3);
+
             System.out.println(" ");
             System.out.println("RETRIEVED AN EXISTING RECORD: " + customer);
 
-            sessionCrud.close();
+            //                    RETRIEVE ALL EXISTING CUSTOMERS
+        } else if (chosenOption.equals("3"))
+        {
+             //Department department = sessionCrud.get(Department.class,2);
+            //Customer customer = session.
 
-
-        } else if (chosenOption.equals("3")) {
-            //----------------get all records------------------------------------
-            //Department department = sessionCrud.get(Department.class,2);
-//            Customer customer = sessionCrud.
-//
-//            List li = sessionCrud.createQuery("Department");
-//
-//            System.out.println(" ");
-//            System.out.println("RETRIEVED AN EXISTING RECORD: " + customer);
-//
-//            sessionCrud.close();
-
-            System.out.println("GET ALL RECORDS");
-
-
-        } else if (chosenOption.equals("4")) {
-            //----------------update a record------------------------------------
+            System.out.println("CUSTOMER COUNTER: " + customerCounter);
+            for (int i = 1; i < customerCounter + 1; i++)
+            {
+                Customer customer = session.get(Customer.class, i);
+                System.out.println("CUSTOMER NUM: " + i + " " + customer);
+            }
+            //                    UPDATE EXISTING CUSTOMER
+        } else if (chosenOption.equals("4"))
+        {
             System.out.println("UPDATE RECORD");
 
-
-            Customer customer = sessionCrud.get(Customer.class, 2);
+            Customer customer = session.get(Customer.class, 2);
             customer.setCustomerName("changed customer name");
 
-//            Department department = sessionCrud.get(Department.class,2);  //accessing this id in the table
-//            department.setDepartmentName("changed department name");                //updating the table
+            Department department = session.get(Department.class, 2);
+            department.setDepartmentName("changed department name");
 
-            sessionCrud.update(customer);
-            //sessionCrud.save(department);
-
-            transactionCrud.commit();                                // actually committing/saving all my changes to my database
+            session.update(customer);
+            session.update(department);
 
             System.out.println(" ");
             System.out.println("UPDATED AN EXISTING RECORD: " + customer);
 
-            sessionCrud.close();
+            session.flush();                 // actually committing/saving all my changes to my database
 
         }
+        //                    DELETE EXISTING CUSTOMER
         else if (chosenOption.equals("5"))
         {
             //----------------delete a record------------------------------------
 
-
 //          Department department = sessionCrud.get(Department.class,2);    //accessing this id in the table
 //          department.setDepartmentName("changed department name");        //updating the table
 
-            currentCustomer2 = sessionCrud.get(Customer.class, 2);
-            System.out.println("BEFORE DELETE RECORD" + currentCustomer2);
-            sessionCrud.delete(currentCustomer2);
+            currentCustomer2 = session.get(Customer.class, 2);
 
-            transactionCrud.commit();
-            //session.close();
+            session.delete(currentCustomer2);
+
+            session.flush();
 
             System.out.println(" ");
             System.out.println("DELETE RECORD");
@@ -192,6 +190,37 @@ public class Main
     }//main end
 
 
+
+//    public static void addNewCustomer()
+//    {
+//        Customer potentialCustomer4 = new Customer();
+//
+//        potentialCustomer4.setCustomerName("Lula Washington");
+//        potentialCustomer4.setCustomerZip("87458");
+//        department2.setDepartmentName("Potential Customer");
+//
+//
+//        potentialList1.add(potentialCustomer4);
+//        session.save(potentialCustomer4);
+//        customerCounter++;
+//
+//        //department2.setCustomerList(potentialList1);
+//        //session.save(department2);
+//
+//        session.flush();
+//
+//        System.out.println(" ");
+//        System.out.println("ADD A NEW CUSTOMER" + potentialCustomer4);
+//    }
+
+
+
+//    private static void addCustomerToArrayList(customerList1, Customer customer)
+//    {
+//        customerList1.add(customer);
+//        customerList1.add(customer);
+//
+//    }
 
 
 //-----------BEFORE I MADE ANY CHANGES ON 5/10/23 @ 10:02 pm

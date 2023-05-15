@@ -16,11 +16,21 @@
 	<name>alisa_porras_RealEstate_capstone</name>
 	<description>This is my capstone project</description>
 
+	<!-- /////////////////////////PROPERTIES////////////////////////////////////////  -->
 	<properties>
 		<java.version>19</java.version>
+
+
+		<maven.compiler.source>19</maven.compiler.source>
+		<maven.compiler.target>19</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<junit.version>5.9.2</junit.version>
+
 	</properties>
 
-	<!-- ///////////////////////////////////////////////////////////////////  -->
+
+
+	<!-- /////////////////////////DEPENDENCIES//////////////////////////////////////////  -->
 	<dependencies>
 
 		<dependency>
@@ -58,6 +68,36 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-params</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<version>3.20.2</version>
+			<scope>test</scope>
+		</dependency>
+
 
 
 	</dependencies>
